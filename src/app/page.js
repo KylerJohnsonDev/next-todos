@@ -1,5 +1,6 @@
 "use client";
 import ListItem from "@/components/ListItem";
+import { UserButton, UserProfile } from "@clerk/nextjs";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
     return todos ? JSON.parse(todos) : [];
   });
   const inputRef = useRef(null);
+  const afterSignOutUrl = `${window.location.origin}/sign-in`;
 
   useEffect(() => {
     // update todos in localstorage anytime todos changes
@@ -39,6 +41,7 @@ export default function Home() {
 
   return (
     <>
+      <UserButton afterSignOutUrl={afterSignOutUrl} />
       <input
         ref={inputRef}
         placeholder="Type a todo and press 'Enter'"
