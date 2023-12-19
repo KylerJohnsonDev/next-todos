@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
 }
-const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
+const clerkPubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const metadata = {
   title: "Next Todos",

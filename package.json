@@ -17,7 +17,9 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@prisma/client": "^5.7.1",
     "eslint": "^8",
-    "eslint-config-next": "14.0.3"
+    "eslint-config-next": "14.0.3",
+    "sqlite3": "^5.1.6"
   }
 }
