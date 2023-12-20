@@ -1,13 +1,12 @@
-import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs";
+import prisma from "@/db";
 
 export async function GET() {
-  const prismaClient = new PrismaClient();
   const { userId } = auth();
   if (!userId) {
     return Response.error(401, "Unauthorized");
   }
-  const todos = await prismaClient.todo.findMany({
+  const todos = await prisma.todo.findMany({
     where: {
       userId,
     },
@@ -17,13 +16,12 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  const prismaClient = new PrismaClient();
   const { userId } = auth();
   if (!userId) {
     return Response.error(401, "Unauthorized");
   }
   const { text } = await req.json();
-  const todo = await prismaClient.todo.create({
+  const todo = await prisma.todo.create({
     data: {
       text,
       userId,
@@ -33,13 +31,12 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
-  const prismaClient = new PrismaClient();
   const { userId } = auth();
   if (!userId) {
     return Response.error(401, "Unauthorized");
   }
   const { id, isComplete } = await req.json();
-  const updatedTodo = await prismaClient.todo.update({
+  const updatedTodo = await prisma.todo.update({
     where: {
       id,
     },
@@ -51,13 +48,12 @@ export async function PUT(req) {
 }
 
 export async function DELETE(req) {
-  const prismaClient = new PrismaClient();
   const { userId } = auth();
   if (!userId) {
     return Response.error(401, "Unauthorized");
   }
   const { id } = await req.json();
-  const todo = await prismaClient.todo.delete({
+  const todo = await prisma.todo.delete({
     where: {
       id,
     },

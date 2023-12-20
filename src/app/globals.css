@@ -21,8 +21,22 @@ body {
 body {
   background-color: var(--background);
   color: var(--textColor);
-  padding: 1rem;
   font-size: var(--fontSize);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.app-content {
+  padding: 1rem;
 }
 
 .todo-input {
