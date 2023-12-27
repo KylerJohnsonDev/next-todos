@@ -1,7 +1,14 @@
-"use client";
-import { useState, useEffect } from "react";
-import ListItem from "@/components/ListItem";
 import { genericFetch } from "@/genericFetch";
+import { useState, useEffect, useRef } from "react";
+import TodoList from "@/components/TodoList";
+
+const createTodoFetcher = (text) => {
+  return () =>
+    fetch("/api/todos", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+};
 
 const loadTodosFetcher = () => fetch("/api/todos");
 const updateTodoFetcher = (todo) => {
@@ -19,10 +26,11 @@ const deleteTodoFetcher = (id) => {
     });
 };
 
-const TodoList = () => {
+export default function Todo () {
   const [todos, setTodos] = useState([]);
   const [isLoadingTodos, setIsLoadingTodos] = useState(true);
   const [error, setError] = useState(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     async function loadTodos() {
@@ -38,6 +46,22 @@ const TodoList = () => {
 
     loadTodos();
   }, []);
+
+  const onEnterTodo = async (event) => {
+    if (event.key === "Enter") {
+      const { data, error } = await genericFetch(
+        createTodoFetcher(event.target.value)
+      );
+      if (error) {
+        setError(error);
+      }
+      if (data) {
+        const updatedTodos = [...todos, data];
+        setTodos(updatedTodos);
+        inputRef.current.value = "";
+      }
+    }
+  };
 
   const onClickTodoItem = async (todo) => {
     const newTodo = {...todo, isComplete: !todo.isComplete }
@@ -65,26 +89,16 @@ const TodoList = () => {
     }
   };
 
-  if (isLoadingTodos) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       {error && <div className="error-banner">{error}</div>}
-      <ul className="todo-container">
-        {todos.map((todo, index) => (
-          <ListItem
-            key={index}
-            todo={todo}
-            index={index}
-            onClickTodoItem={onClickTodoItem}
-            deleteTodo={deleteTodo}
-          />
-        ))}
-      </ul>
+      <input
+        ref={inputRef}
+        placeholder="Type a todo and press 'Enter'"
+        className="todo-input"
+        onKeyDown={(event) => onEnterTodo(event)}
+      />
+      <TodoList todos={todos} isLoadingTodos={isLoadingTodos} onClickTodoItem={onClickTodoItem} deleteTodo={deleteTodo} />
     </>
   );
-};
-
-export default TodoList;
+}
