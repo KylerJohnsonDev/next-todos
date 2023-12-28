@@ -2,24 +2,37 @@
 import ListItem from "@/components/ListItem";
 import React, { useEffect, useRef, useState } from "react";
 
-export default function Home() {
-  const localStorageKey = "todos";
-  const [todos, setTodos] = useState(() => {
-    // initialize todos from localstorage
-    const todos = window.localStorage.getItem(localStorageKey);
-    return todos ? JSON.parse(todos) : [];
+const fetchTodos = async () => {
+  const res = await fetch("/api/todos");
+  return await res.json();
+}
+
+const createTodo = async(text) => {
+  const res = await fetch("/api/todos", {
+    method: "POST",
+    body: JSON.stringify({ text })
   });
+  return await res.json();
+}
+
+export default function Home() {
+
+  const [todos, setTodos] = useState([]);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    // update todos in localstorage anytime todos changes
-    const stringifiedTodos = JSON.stringify(todos);
-    window?.localStorage.setItem(localStorageKey, stringifiedTodos);
-  }, [todos]);
+    async function loadTodos() {
+      const todos = await fetchTodos();
+      setTodos(todos);
+    }
+    loadTodos();
+  }, []);
 
-  const onEnterTodo = (event) => {
+  const onEnterTodo = async(event) => {
     if (event.key === "Enter") {
-      setTodos([...todos, { text: event.target.value, isComplete: false }]);
+      const todo = await createTodo(event.target.value);
+      const newTodos = [...todos, todo];
+      setTodos(newTodos);
       inputRef.current.value = "";
     }
   };

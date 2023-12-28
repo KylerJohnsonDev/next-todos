@@ -25,6 +25,17 @@ body {
   font-size: var(--fontSize);
 }
 
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+
+  h1 {
+    margin: 0;
+  }
+}
+
 .todo-input {
   width: 100%;
   padding: 0.75rem;
