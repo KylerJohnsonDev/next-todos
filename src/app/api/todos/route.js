@@ -24,7 +24,40 @@ export async function POST(req) {
   const todo = await prisma.todo.create({
     data: {
       text,
-      userId
+      userId,
+    }
+  })
+
+  return Response.json(todo);
+}
+
+export async function PUT(req) {
+  const { userId } = auth();
+  if(!userId) {
+    return { redirect: '/sign-in' }
+  }
+  const { id, isComplete } = await req.json();
+  const todo = await prisma.todo.update({
+    where: {
+      id
+    },
+    data: {
+      isComplete,
+    }
+  })
+
+  return Response.json(todo);
+}
+
+export async function DELETE(req) { 
+  const { userId } = auth();
+  if(!userId) {
+    return { redirect: '/sign-in' }
+  }
+  const { id } = await req.json();
+  const todo = await prisma.todo.delete({
+    where: {
+      id
     }
   })
 

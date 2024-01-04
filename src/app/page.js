@@ -15,6 +15,22 @@ const createTodo = async(text) => {
   return await res.json();
 }
 
+const updateTodo = async(todo) => {
+  const res = await fetch("/api/todos", {
+    method: "PUT",
+    body: JSON.stringify(todo)
+  });
+  return await res.json();
+}
+
+const deleteTodo = async(id) => {
+  const res = await fetch("/api/todos", {
+    method: "DELETE",
+    body: JSON.stringify({ id })
+  });
+  return await res.json();
+}
+
 export default function Home() {
 
   const [todos, setTodos] = useState([]);
@@ -37,16 +53,18 @@ export default function Home() {
     }
   };
 
-  const onClickTodoItem = (index) => {
+  const onClickTodoItem = async(todo, index) => {
+    const todoToUpdate = { ...todo, isComplete: !todo.isComplete };
+    const updatedTodo = await updateTodo(todoToUpdate);
     const newTodos = [...todos];
-    newTodos[index].isComplete = !newTodos[index].isComplete;
+    newTodos.splice(index, 1, updatedTodo);
     setTodos(newTodos);
   };
 
-  const deleteTodo = (event, index) => {
+  const onClickDeleteTodo = async(event, id) => {
     event.stopPropagation();
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
+    const deletedTodo = await deleteTodo(id);
+    const newTodos = todos.filter((todo) => todo.id !== deletedTodo.id);
     setTodos(newTodos);
   };
 
@@ -66,7 +84,7 @@ export default function Home() {
             todo={todo}
             index={index}
             onClickTodoItem={onClickTodoItem}
-            deleteTodo={deleteTodo}
+            onClickDeleteTodo={onClickDeleteTodo}
           />
         ))}
       </ul>
