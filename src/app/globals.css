@@ -81,3 +81,11 @@ body {
 .counts {
   text-align: center;
 }
+
+.error-banner {
+  background-color: #ff0000;
+  color: whitesmoke;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}

@@ -34,12 +34,18 @@ const deleteTodo = async(id) => {
 export default function Todos() {
 
   const [todos, setTodos] = useState([]);
+  const [error, setError] = useState(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
     async function loadTodos() {
-      const todos = await fetchTodos();
-      setTodos(todos);
+      try {
+        const todos = await fetchTodos();
+        setTodos(todos);
+      } catch (error) {
+        const formattedErrorMessage = `Unable to fetch Todos.`
+        setError(formattedErrorMessage);
+      }
     }
     loadTodos();
   }, []);
@@ -70,6 +76,7 @@ export default function Todos() {
 
   return (
     <>
+      {error && <div className="error-banner">{error}</div>}
       <input
         ref={inputRef}
         placeholder="Type a todo and press 'Enter'"
