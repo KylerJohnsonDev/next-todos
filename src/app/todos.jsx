@@ -1,6 +1,9 @@
 'use client'
 import ListItem from "@/components/ListItem";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import useSWR from "swr";
+
+const todosFetcher = url => fetch(url).then(res => res.json());
 
 const fetchTodos = async () => {
   const res = await fetch("/api/todos");
@@ -34,21 +37,10 @@ const deleteTodo = async(id) => {
 export default function Todos() {
 
   const [todos, setTodos] = useState([]);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    async function loadTodos() {
-      try {
-        const todos = await fetchTodos();
-        setTodos(todos);
-      } catch (error) {
-        const formattedErrorMessage = `Unable to fetch Todos.`
-        setError(formattedErrorMessage);
-      }
-    }
-    loadTodos();
-  }, []);
+  const { data, error, isLoading } = useSWR('/api/todos', todosFetcher);
 
   const onEnterTodo = async(event) => {
     if (event.key === "Enter") {
@@ -74,6 +66,10 @@ export default function Todos() {
     setTodos(newTodos);
   };
 
+  if(error) {
+    return (<>{error.message}</>)
+  }
+
   return (
     <>
       {error && <div className="error-banner">{error}</div>}
@@ -83,18 +79,19 @@ export default function Todos() {
         className="todo-input"
         onKeyDown={(event) => onEnterTodo(event)}
       />
-
+      {data && 
       <ul className="todo-container">
-        {todos.map((todo, index) => (
+        {data.map((todo, index) => (
           <ListItem
-            key={index}
-            todo={todo}
-            index={index}
-            onClickTodoItem={onClickTodoItem}
-            onClickDeleteTodo={onClickDeleteTodo}
+          key={index}
+          todo={todo}
+          index={index}
+          onClickTodoItem={onClickTodoItem}
+          onClickDeleteTodo={onClickDeleteTodo}
           />
-        ))}
+          ))}
       </ul>
+        }
     </>
   );
 }
