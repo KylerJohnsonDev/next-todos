@@ -3,10 +3,8 @@ import ListItem from "@/components/ListItem";
 import React, { useRef, useState } from "react";
 import useSWR from "swr";
 
-const todosFetcher = url => fetch(url).then(res => res.json());
-
-const fetchTodos = async () => {
-  const res = await fetch("/api/todos");
+const fetchTodos = async (url) => {
+  const res = await fetch(url);
   return await res.json();
 }
 
@@ -35,12 +33,9 @@ const deleteTodo = async(id) => {
 }
 
 export default function Todos() {
-
-  const [todos, setTodos] = useState([]);
-  // const [error, setError] = useState(null);
   const inputRef = useRef(null);
 
-  const { data, error, isLoading } = useSWR('/api/todos', todosFetcher);
+  const { data: todos, error, isLoading, mutate } = useSWR('/api/todos', fetchTodos);
 
   const onEnterTodo = async(event) => {
     if (event.key === "Enter") {
@@ -56,18 +51,22 @@ export default function Todos() {
     const updatedTodo = await updateTodo(todoToUpdate);
     const newTodos = [...todos];
     newTodos.splice(index, 1, updatedTodo);
-    setTodos(newTodos);
+    mutate(newTodos)
   };
 
   const onClickDeleteTodo = async(event, id) => {
     event.stopPropagation();
     const deletedTodo = await deleteTodo(id);
     const newTodos = todos.filter((todo) => todo.id !== deletedTodo.id);
-    setTodos(newTodos);
+    mutate(newTodos)
   };
 
   if(error) {
     return (<>{error.message}</>)
+  }
+
+  if(isLoading) {
+    return (<>{'Loading...'}</>)
   }
 
   return (
@@ -79,9 +78,9 @@ export default function Todos() {
         className="todo-input"
         onKeyDown={(event) => onEnterTodo(event)}
       />
-      {data && 
+      {todos && 
       <ul className="todo-container">
-        {data.map((todo, index) => (
+        {todos.map((todo, index) => (
           <ListItem
           key={index}
           todo={todo}
