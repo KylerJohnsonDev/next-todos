@@ -41,7 +41,7 @@ export default function Todos() {
     if (event.key === "Enter") {
       const todo = await createTodo(event.target.value);
       const newTodos = [...todos, todo];
-      setTodos(newTodos);
+      mutate(newTodos)
       inputRef.current.value = "";
     }
   };
