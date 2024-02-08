@@ -1,4 +1,5 @@
 import { Todo } from "@prisma/client";
+import prisma from "./db";
 
 export function fetchTodosByUserId(userId: string): Promise<Todo[]> {
   return prisma.todo.findMany({
