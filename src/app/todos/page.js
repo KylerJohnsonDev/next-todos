@@ -1,5 +1,10 @@
 import { auth } from "@clerk/nextjs";
-import { fetchTodosByUserId, createTodo } from "@/database/todos";
+import {
+  fetchTodosByUserId,
+  createTodo,
+  updateTodoById,
+  deleteTodoById,
+} from "@/database/todos";
 import TodoList from "./TodoList";
 import { revalidatePath } from "next/cache";
 
@@ -15,6 +20,18 @@ export default async function TodosPage() {
     revalidatePath("/todos");
   }
 
+  async function toggleTodoStatus(todo) {
+    "use server";
+    await updateTodoById(todo.id, !todo.isComplete);
+    revalidatePath("/todos");
+  }
+
+  async function deleteTodoById(id) {
+    "use server";
+    await deleteTodoById(id);
+    revalidatePath("/todos");
+  }
+
   return (
     <>
       <form action={addTodo}>
@@ -26,7 +43,11 @@ export default async function TodosPage() {
         />
       </form>
 
-      <TodoList todos={todos} />
+      <TodoList
+        todos={todos}
+        toggleTodoStatus={toggleTodoStatus}
+        deleteTodoById={deleteTodoById}
+      />
     </>
   );
 }
