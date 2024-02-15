@@ -1,25 +1,33 @@
 import { auth } from "@clerk/nextjs";
 import { fetchTodosByUserId } from "@/database/todos";
-import TodoItem from "./TodoItem";
+import TodoList from "./TodoList";
+import { createTodo } from "@/database/todos";
+import { revalidatePath } from "next/cache";
 
 export default async function TodosPage() {
   const { userId } = auth();
   const todos = await fetchTodosByUserId(userId);
 
-  if (todos.length === 0) {
-    return (
-      <div className="empty-todos">
-        <h1>Nothing to do!</h1>
-        <p>Start by adding a new todo.</p>
-      </div>
-    );
+  async function addTodo(formData) {
+    "use server";
+    const { userId } = auth();
+    const todoText = formData.get("todo");
+    await createTodo(userId, todoText);
+    revalidatePath("/todos");
   }
 
   return (
-    <ul className="todo-container">
-      {todos.map((todo, index) => (
-        <TodoItem key={index} todo={todo} index={index} />
-      ))}
-    </ul>
+    <>
+      <form action={addTodo}>
+        <input
+          name="todo"
+          className="todo-input"
+          type="text"
+          placeholder="Enter todo text"
+        />
+      </form>
+
+      <TodoList todos={todos} />
+    </>
   );
 }

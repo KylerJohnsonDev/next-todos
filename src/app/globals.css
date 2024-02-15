@@ -25,6 +25,10 @@ body {
   font-size: var(--fontSize);
 }
 
+.hidden {
+  display: none;
+}
+
 .app-header {
   display: flex;
   justify-content: space-between;

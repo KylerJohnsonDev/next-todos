@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs";
-import prisma from "@/database/db";
 import {
   deleteTodoById,
   fetchTodosByUserId,
