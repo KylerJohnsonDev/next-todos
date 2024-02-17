@@ -1,20 +1,18 @@
-
+.wrapper {
+  line-height: 1.5rem;
+  letter-spacing: .05rem;
+}
 
 .linksContainer {
-  display: flex;
-  gap: 1rem;
   margin-top: 20px;
-
-  .link {
-    text-decoration: none;
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    transition: all 0.3s ease;
-  }
-
-  .link:hover {
-    background-color: #e2e2e2;
-  }
 }
+
+.linksContainer a {
+  color: #388094;
+  cursor: pointer;
+}
+
+.linksContainer .topLevelListItem:not(:first-child) {
+  margin-top: .5rem;
+}
+
