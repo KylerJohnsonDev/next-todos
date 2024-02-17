@@ -1,36 +1,31 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+Notes:
+
+- This project uses [Clerk](https://clerk.com/docs/quickstarts/nextjs) for authentication/authorization and user managemnt. To get this working locally, you'll need to create an account [here](https://dashboard.clerk.com/sign-up).
+
+- The directions below assume you have LTS version of node.js installed on your machine.
+
 ## Getting Started
 
-First, run the development server:
+1. In your terminal, run `git clone https://github.com/KylerJohnsonDev/next-todos.git` to clone this repo into your current directory
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Run `cd next-todos`to navigate into the project directory
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Run `npm install` to install the project dependencies
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+4. Run `touch .env.local` to create a local config file and copy the contents of .env.local.example into it for now
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+5. Go to your Clerk account and create a new project called "next-todos"
 
-## Learn More
+6. By default, Clerk will redirect you to a clerk account portal to login. For development, we want that to be local to our project. To do that, select the "Paths" link in the left side bar.
 
-To learn more about Next.js, take a look at the following resources:
+7. For the `<SignIn />` section, select the option that says, "Sign-in page on development host," and in the input below, type `/sign-in`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+8. For the `<SignUp />` section, select the option that says, "Sign-up page on development host," and in the input below, type `/sign-up`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+9. For the `<UserButton />` section, select the option that says, "Page on development host," and in the input below, type `/sign-in`.
 
-## Deploy on Vercel
+10. Now, in the Clerk portal, select the "API Keys" link in the left side bar. At the top of the page, you'll see a code section containing two keys. Copy each of those keys and paste them into their corresponding environment variable in your `.env.local` file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+11. Run `npm run dev` to run the dev server and navigate in to [http://localhost:3000](http://localhost:3000) in your browser to access the site.
