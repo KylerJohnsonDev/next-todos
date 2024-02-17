@@ -1,5 +1,5 @@
 'use client'
-import ListItem from "@/components/ListItem";
+import ListItem from "./ListItem";
 import React, { useRef, useState } from "react";
 import useSWR from "swr";
 
